@@ -1,5 +1,13 @@
 
 
+## [0.1.1](https://github.com/Dissme/easy-model/compare/0.1.0...0.1.1) (2022-08-08)
+
+
+### 📦 杂项
+
+* 修改了release-it的流程 ([182b6f5](https://github.com/Dissme/easy-model/commit/182b6f51ff28b06c78e65420f6c24181d0cc419b))
+* 修改ci流程 ([c85a811](https://github.com/Dissme/easy-model/commit/c85a811d73b5b97207c198a875ab6ddd9c789c64))
+
 ## 0.1.0 (2022-08-08)
 
 
