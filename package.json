@@ -61,5 +61,19 @@
   },
   "bugs": {
     "url": "https://github.com/Dissme/easy-model/issues"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "easy",
+    "model"
+  ],
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "package.json"
+  ]
 }
