@@ -5,7 +5,7 @@ import bp from "vite-plugin-babel";
 const babel = bp.default;
 
 const getPackageName = () => {
-  return packageJson.name;
+  return packageJson.name.replace(/@.*\//, "");
 };
 
 const getPackageNameCamelCase = () => {
