@@ -1,0 +1,10 @@
+{
+  "./**/*.{html,json}": [
+    "prettier --write"
+  ],
+  "./**/*.{js}": [
+    "prettier --write",
+    "eslint --fix",
+    "vitest run --coverage"
+  ]
+}

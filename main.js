@@ -1,9 +1,4 @@
-# 说明
-
-## 使用方法
-
-```js
-import { off, primaryKey, easy, inited } from "easy-model";
+import { off, primaryKey, easy, inited } from "./src/index";
 
 @easy
 class TestModel {
@@ -21,11 +16,11 @@ class TestModel {
   }
 
   get() {
-    return; // 在这里请求，返回后段返回的数据
+    return { name: "fasdf", lastName: "gasdfqwer" }; // 在这里请求，返回后段返回的数据
   }
 
   post() {
-    return; // 在这里请求，返回后段返回的数据
+    return { id: 123, tel: 321 }; // 在这里请求，返回后段返回的数据
   }
 
   put() {
@@ -49,11 +44,8 @@ const m3 = new TestModel({ id: m2.id, tel: m2.tel });
 m3.name = "asdf";
 await m3.sync(); // 会调用put
 console.log(m3.name, m3.name === m2.name, m3 === m2); // 相同的主键是同一个对象
-m3.name = 'fasdf';
-m3.lastName = 'galsadkfjlkj';
+m3.name = "fasdf";
+m3.lastName = "galsadkfjlkj";
 m3.reset();
-console.log(m3.name, m2.name) // 还原成最近一次跟后端交互过的状态
+console.log(m3.name, m2.name); // 还原成上一次的了
 m3.sync(); // 不会请求
-```
-
-## [changelog](./CHANGELOG.md)
