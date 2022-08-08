@@ -1,5 +1,5 @@
 {
-  "name": "easy-model",
+  "name": "@easythings/easy-model",
   "version": "0.0.1",
   "description": "一组给model用的decorator",
   "author": "344275632@qq.com",
@@ -22,6 +22,7 @@
     "prepare": "husky install",
     "prepublish": "npm run build",
     "commit": "git add . && cz",
+    "release": "npm run commit && release-it --ci",
     "release:beta": "npm run commit && release-it major --preRelease=beta --ci",
     "release:major": "npm run commit && release-it major --ci"
   },
@@ -53,5 +54,12 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dissme/easy-model.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dissme/easy-model/issues"
   }
 }

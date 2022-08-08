@@ -1,4 +1,4 @@
-import { off, primaryKey, easy, inited } from "./index";
+import { off, primaryKey, easy, inited, listen, unlisten } from "./index";
 import { test, expect } from "vitest";
 import mockDatas from "./mock.json";
 
@@ -143,4 +143,20 @@ test("put", async () => {
   expect(model2).to.have.property(inited, true);
   expect(model1).to.have.property("name", "I'm put");
   expect(model2).to.have.property("name", "I'm put");
+});
+
+test("changed", async () => {
+  const model = new TestModel();
+  let changed = false;
+  listen(model, "changed", payload => {
+    console.log(payload);
+    expect(model).to.include(payload);
+    changed = true;
+  });
+  model.name = "atention";
+  expect(changed).to.equal(true);
+  changed = false;
+  unlisten(model, "changed");
+  model.name = "atention";
+  expect(changed).to.equal(false);
 });

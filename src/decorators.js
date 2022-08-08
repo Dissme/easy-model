@@ -1,3 +1,4 @@
+import { trigger } from "./evt";
 import { like, pick } from "./utils/helpers";
 import LRU from "./utils/lru";
 import { getMeta, setMeta } from "./utils/meta";
@@ -13,6 +14,8 @@ function injectRelated(fn) {
 }
 
 export const inited = Symbol("inited");
+export const CHANGED = "changed";
+export const DESTROYED = "destroyed";
 
 export function primaryKey(_, { kind, name, isStatic }) {
   if (kind !== "field" || isStatic) throw "只能装饰非静态Field";
@@ -82,7 +85,9 @@ export function easy(T, { kind }) {
               if (!target.#lastSnapShot) target.#lastSnapShot = { ...target };
             }
 
-            return Reflect.set(target, key, value, receiver);
+            Reflect.set(target, key, value, receiver);
+            trigger(result, CHANGED, { [key]: value });
+            return true;
           }
         });
         if (this.#exited) EasyModel.#instances.set(this.#primaryObj, result);
@@ -102,6 +107,7 @@ export function easy(T, { kind }) {
           [inited]: true
         });
         target.#lastSnapShot = null;
+        trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
         throw error;
@@ -119,6 +125,7 @@ export function easy(T, { kind }) {
         });
         EasyModel.#instances.set(target.#primaryObj, this);
         target.#lastSnapShot = null;
+        trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
         throw error;
@@ -134,6 +141,7 @@ export function easy(T, { kind }) {
         const result = await super.put?.();
         Object.assign(target, result, ...target.#wirteQueue);
         target.#lastSnapShot = null;
+        trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
         throw error;
@@ -172,6 +180,7 @@ export function easy(T, { kind }) {
           target[key] = target.#lastSnapShot[key];
         });
       target.#lastSnapShot = null;
+      trigger(this, CHANGED, target);
     }
 
     @injectRelated
@@ -179,6 +188,7 @@ export function easy(T, { kind }) {
       EasyModel.#instances.drop(target.#primaryObj);
       target.#lastSnapShot = null;
       super.destroy?.();
+      trigger(this, DESTROYED);
     }
   };
 }
