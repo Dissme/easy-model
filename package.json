@@ -22,9 +22,9 @@
     "prepare": "husky install",
     "prepublish": "npm run build",
     "commit": "git add . && cz",
-    "release": "npm run commit && release-it --ci",
-    "release:beta": "npm run commit && release-it major --preRelease=beta --ci",
-    "release:major": "npm run commit && release-it major --ci"
+    "release": "npm run commit | release-it --ci",
+    "release:beta": "npm run commit | release-it major --preRelease=beta --ci",
+    "release:major": "npm run commit | release-it major --ci"
   },
   "devDependencies": {
     "@babel/core": "^7.18.9",
