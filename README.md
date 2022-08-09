@@ -1,9 +1,13 @@
 # 说明
 
 ## 使用方法
+```bash
+npm i @easythings/easy-model
+```
+
 
 ```js
-import { off, primaryKey, easy, inited } from "easy-model";
+import { off, primaryKey, easy, inited } from "@easythings/easy-model";
 
 @easy
 class TestModel {

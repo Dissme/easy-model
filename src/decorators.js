@@ -1,5 +1,5 @@
 import { trigger } from "./evt";
-import { like, pick } from "./utils/helpers";
+import { pick } from "./utils/helpers";
 import LRU from "./utils/lru";
 import { getMeta, setMeta } from "./utils/meta";
 
@@ -82,7 +82,6 @@ export function easy(T, { kind }) {
             const offs = getMeta(EasyModel, OFF_KEY);
             if (!offs?.has?.(key)) {
               target.#wirteQueue.push({ [key]: value });
-              if (!target.#lastSnapShot) target.#lastSnapShot = { ...target };
             }
 
             Reflect.set(target, key, value, receiver);
@@ -92,9 +91,18 @@ export function easy(T, { kind }) {
         });
         if (this.#exited) EasyModel.#instances.set(this.#primaryObj, result);
         setMeta(result, RELATED, this);
+        this.#updateSnapshot();
       }
 
       return result;
+    }
+
+    #updateSnapshot(payload) {
+      if (payload)
+        Object.keys({ ...this, ...payload }).forEach(key => {
+          this[key] = payload[key];
+        });
+      this.#lastSnapShot = { ...this };
     }
 
     @injectRelated
@@ -103,10 +111,10 @@ export function easy(T, { kind }) {
       target.#wirteQueue = [];
       try {
         const result = await super.get?.();
-        Object.assign(target, result, ...wirteQueue, ...target.#wirteQueue, {
+        target.#updateSnapshot(result);
+        Object.assign(target, ...wirteQueue, ...target.#wirteQueue, {
           [inited]: true
         });
-        target.#lastSnapShot = null;
         trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
@@ -120,11 +128,11 @@ export function easy(T, { kind }) {
       target.#wirteQueue = [];
       try {
         const result = await super.post?.();
-        Object.assign(target, result, ...target.#wirteQueue, {
+        target.#updateSnapshot(result);
+        Object.assign(target, ...target.#wirteQueue, {
           [inited]: true
         });
         EasyModel.#instances.set(target.#primaryObj, this);
-        target.#lastSnapShot = null;
         trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
@@ -139,8 +147,8 @@ export function easy(T, { kind }) {
 
       try {
         const result = await super.put?.();
-        Object.assign(target, result, ...target.#wirteQueue);
-        target.#lastSnapShot = null;
+        target.#updateSnapshot(result);
+        Object.assign(target, ...target.#wirteQueue);
         trigger(this, CHANGED, target);
       } catch (error) {
         target.#wirteQueue.unshift(...wirteQueue);
@@ -174,11 +182,12 @@ export function easy(T, { kind }) {
     reset(target) {
       if (target.#syncing) return target.#syncing;
       target.#wirteQueue = [];
-      Object.keys(target.#lastSnapShot)
-        .concat(Object.keys(target))
-        .forEach(key => {
-          target[key] = target.#lastSnapShot[key];
-        });
+      Object.keys({
+        ...target,
+        ...target.#lastSnapShot
+      }).forEach(key => {
+        target[key] = target.#lastSnapShot[key];
+      });
       target.#lastSnapShot = null;
       trigger(this, CHANGED, target);
     }
