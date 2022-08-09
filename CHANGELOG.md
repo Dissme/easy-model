@@ -1,5 +1,12 @@
 
 
+## [0.1.2](https://github.com/Dissme/easy-model/compare/0.1.1...0.1.2) (2022-08-09)
+
+
+### 🐛 Bug 修复
+
+* 修复更新状态时机不对的问题 ([fc09512](https://github.com/Dissme/easy-model/commit/fc095123d4719573afdd2d65390be87c79c814e2))
+
 ## [0.1.1](https://github.com/Dissme/easy-model/compare/0.1.0...0.1.1) (2022-08-08)
 
 
